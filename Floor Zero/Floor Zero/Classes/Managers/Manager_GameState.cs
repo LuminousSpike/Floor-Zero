@@ -118,7 +118,7 @@ namespace Floor_Zero.Classes.Managers
             else if (currentGameState == GameState.PaintScreen)
             {
                 paintScreen.Initialize(game);
-                paintScreen.LoadContent(Content);
+                paintScreen.LoadContent(Content, graphicsDevice);
                 loadedGameState = GameState.PaintScreen;
             }
         }

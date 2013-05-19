@@ -78,6 +78,7 @@
     <Compile Include="Classes\Entities\Entity2D.cs" />
     <Compile Include="Classes\File System\FileParser.cs" />
     <Compile Include="Classes\File System\TileMapParser.cs" />
+    <Compile Include="Classes\Managers\HUD\Game Editor\Hud_Manager_GameEditor.cs" />
     <Compile Include="Classes\Managers\Manager_GameState.cs" />
     <Compile Include="Classes\Managers\Manager_Tile.cs" />
     <Compile Include="Classes\Screens\GameScreen.cs" />

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Solar.Graphics.Cameras;
+using Floor_Zero.Classes.Managers.HUD.Game_Editor;
 
 namespace Floor_Zero.Classes.Screens
 {
@@ -12,7 +13,7 @@ namespace Floor_Zero.Classes.Screens
         // Managers
         Manager_Tile manager_Tile;
         BasicCamera2D camera = new BasicCamera2D();
-        
+        Hud_Manager_GameEditor manager_Hud = new Hud_Manager_GameEditor();
 
         public PaintScreen()
         {
@@ -24,25 +25,28 @@ namespace Floor_Zero.Classes.Screens
         {
             // Managers
             manager_Tile.Initialize();
-            
+            manager_Hud.Initialize();
         }
 
-        public void LoadContent(ContentManager Content)
+        public void LoadContent(ContentManager Content, GraphicsDevice graphicsDevice)
         {
             // Managers
             manager_Tile.LoadContent(Content, true);
+            manager_Hud.LoadContent(Content, graphicsDevice);
         }
 
         public void UnloadContent()
         {
             // Managers
             manager_Tile.UnloadContent();
+            manager_Hud.UnloadContent();
         }
 
         public void Update(GameTime gameTime)
         {
             // Managers
             manager_Tile.Update(camera);
+            manager_Hud.Update();
             UpdateCamera();
 
         }
@@ -53,6 +57,10 @@ namespace Floor_Zero.Classes.Screens
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
             manager_Tile.Draw(spriteBatch, camera);
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+            manager_Hud.Draw(spriteBatch);
             spriteBatch.End();
         }
 
