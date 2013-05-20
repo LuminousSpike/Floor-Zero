@@ -19,7 +19,7 @@ namespace Floor_Zero.Classes.Managers
         private int gridSize = 240, tileSize = 64, selectedTileIndex = 3;
         private Tile[,] tileGrid;
         private SpriteSheet tileSheet;
-        private Vector2 selectedTile;
+        private Vector2 selectedTile, CurrentMousePosition;
         KeyboardState currentKeyboardState, previousKeyboardState;
         Rectangle worldArea, _holder, tilesInView;
         Random rand;
@@ -50,6 +50,8 @@ namespace Floor_Zero.Classes.Managers
 
         public void Update(BasicCamera2D camera)
         {
+            CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y), Matrix.Invert(camera._transform));
+
             tilesInView = CullTiles(camera);
 
             currentKeyboardState = Keyboard.GetState();
@@ -128,8 +130,6 @@ namespace Floor_Zero.Classes.Managers
 
         private bool TileArea(int x, int y, BasicCamera2D camera)
         {
-            Vector2 CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y),
-                Matrix.Invert(camera._transform));
             if ((CurrentMousePosition.X >= GetTileLocation(x, y).X - tileSize && CurrentMousePosition.X <= GetTileLocation(x, y).X) &&
                 (CurrentMousePosition.Y >= GetTileLocation(x, y).Y - tileSize && CurrentMousePosition.Y <= GetTileLocation(x, y).Y))
             {
@@ -151,15 +151,16 @@ namespace Floor_Zero.Classes.Managers
             }
         }
 
-        private void RemoveTile(int index)
+        private void RemoveTile(int x, int y)
         {
+            int tile = x * y;
             if (tile % 2 != 0)
             {
-                AddTile(0, GetTileLocation(x, y), x, y);
+                ReplaceTile(0);
             }
             else
             {
-                AddTile(1, GetTileLocation(x, y), x, y);
+                ReplaceTile(1);
             }
         }
 
@@ -234,6 +235,11 @@ namespace Floor_Zero.Classes.Managers
             if (Game1.mouseState.LeftButton == ButtonState.Pressed)
             {
                 ReplaceTile(selectedTileIndex);
+            }
+
+            if (Game1.mouseState.RightButton == ButtonState.Pressed)
+            {
+                RemoveTile((int)CurrentMousePosition.X * tileSize, (int)CurrentMousePosition.Y * tileSize);
             }
 
             if(InputHelper.InputPressed(Keys.P, Buttons.Start))
