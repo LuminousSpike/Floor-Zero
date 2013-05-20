@@ -48,6 +48,13 @@ namespace Floor_Zero.Classes.Entities
             Empty3.Flippable = false;
             types.Add(Empty3);
 
+            // Stone wall
+            var StoneWall = new TileType();
+            StoneWall.Name = "Stone Wall";
+            StoneWall.solid = true;
+            StoneWall.Flippable = true;
+            types.Add(StoneWall);
+
             // Dirt floor
             var DirtFloor = new TileType();
             DirtFloor.Name = "Dirt Floor";
@@ -62,12 +69,13 @@ namespace Floor_Zero.Classes.Entities
             GrassFloor.Flippable = true;
             types.Add(GrassFloor);
 
-            // Stone wall
-            var StoneWall = new TileType();
-            StoneWall.Name = "Stone Wall";
-            StoneWall.solid = true;
-            StoneWall.Flippable = true;
-            types.Add(StoneWall);
+            // Stone floor
+            var StoneFloor = new TileType();
+            StoneFloor.Name = "Stone Floor";
+            StoneFloor.solid = false;
+            StoneFloor.Flippable = true;
+            types.Add(StoneFloor);
+
         }
 
         public static TileType Get(short id)

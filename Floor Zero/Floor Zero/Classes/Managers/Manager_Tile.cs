@@ -165,12 +165,12 @@ namespace Floor_Zero.Classes.Managers
 
         private void ChangeSelectedTileIndex()
         {
-            if (CheckKeyboardState(Keys.X) && selectedTileIndex < 5)
+            if (CheckKeyboardState(Keys.X) && selectedTileIndex < 6)
             {
                 selectedTileIndex++;
             }
 
-            if (CheckKeyboardState(Keys.Z) && selectedTileIndex > 0)
+            if (CheckKeyboardState(Keys.Z) && selectedTileIndex > 3)
             {
                 selectedTileIndex--;
             }
