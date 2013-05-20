@@ -151,6 +151,18 @@ namespace Floor_Zero.Classes.Managers
             }
         }
 
+        private void RemoveTile(int index)
+        {
+            if (tile % 2 != 0)
+            {
+                AddTile(0, GetTileLocation(x, y), x, y);
+            }
+            else
+            {
+                AddTile(1, GetTileLocation(x, y), x, y);
+            }
+        }
+
         private void ChangeSelectedTileIndex()
         {
             if (CheckKeyboardState(Keys.X) && selectedTileIndex < 5)
