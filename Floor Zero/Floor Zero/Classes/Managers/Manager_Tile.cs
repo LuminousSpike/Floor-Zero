@@ -151,10 +151,9 @@ namespace Floor_Zero.Classes.Managers
             }
         }
 
-        private void RemoveTile(int x, int y)
+        private void RemoveTile()
         {
-            int tile = x * y;
-            if (tile % 2 != 0)
+            if ((selectedTile.X + selectedTile.Y) % 2 != 0)
             {
                 ReplaceTile(0);
             }
@@ -239,7 +238,7 @@ namespace Floor_Zero.Classes.Managers
 
             if (Game1.mouseState.RightButton == ButtonState.Pressed)
             {
-                RemoveTile((int)CurrentMousePosition.X * tileSize, (int)CurrentMousePosition.Y * tileSize);
+                RemoveTile();
             }
 
             if(InputHelper.InputPressed(Keys.P, Buttons.Start))
