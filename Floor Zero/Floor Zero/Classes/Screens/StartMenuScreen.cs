@@ -40,7 +40,7 @@ namespace Floor_Zero.Classes.Screens
 
         public void Update()
         {
-            guiSystem.Update();
+            guiSystem.Update(Game1.mouseState);
 
             if (playButton.IsSelected && Keyboard.GetState().IsKeyDown(Keys.E))
             {

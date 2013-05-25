@@ -35,7 +35,7 @@ namespace Floor_Zero.Classes.Managers.HUD.Game_Editor
 
         public void Update()
         {
-            hudSystem.Update();
+            hudSystem.Update(Game1.mouseState);
         }
 
         public void Draw(SpriteBatch spriteBatch)
