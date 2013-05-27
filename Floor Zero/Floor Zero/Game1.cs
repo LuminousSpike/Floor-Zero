@@ -49,7 +49,7 @@ namespace Floor_Zero
         {
             // TODO: Add your initialization logic here
 
-            managerGameState.Initialize();
+            managerGameState.Initialize(this);
             
             base.Initialize();
         }

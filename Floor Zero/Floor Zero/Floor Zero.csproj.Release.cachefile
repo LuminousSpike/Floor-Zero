@@ -2,3 +2,5 @@ Content\Tile_Sheet.xnb
 Content\Button.xnb
 Content\Button Selected.xnb
 Content\font.xnb
+Content\Shaders\Lighting\reductionEffect.xnb
+Content\Shaders\Lighting\resolveShadowsEffect.xnb

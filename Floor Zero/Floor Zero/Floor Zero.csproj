@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>f5be374d-eda7-423b-9c4f-f6bc65979e2c</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -79,6 +79,7 @@
     <Compile Include="Classes\File System\FileParser.cs" />
     <Compile Include="Classes\File System\TileMapParser.cs" />
     <Compile Include="Classes\Managers\HUD\Game Editor\Hud_Manager_GameEditor.cs" />
+    <Compile Include="Classes\Managers\Lighting\Lighting_Manager.cs" />
     <Compile Include="Classes\Managers\Manager_GameState.cs" />
     <Compile Include="Classes\Managers\Manager_Tile.cs" />
     <Compile Include="Classes\Screens\GameScreen.cs" />

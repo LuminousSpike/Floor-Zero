@@ -22,13 +22,14 @@ namespace Floor_Zero.Classes.Managers
         // Game Screens (States)
         StartMenuScreen startMenuScreen = new StartMenuScreen();
         GameScreen gameScreen = new GameScreen();
-        PaintScreen paintScreen = new PaintScreen();
+        PaintScreen paintScreen;
 
         /// <summary>
         /// Initailize the Start Menu.
         /// </summary>
-        public void Initialize()
+        public void Initialize(Game1 game1)
         {
+            paintScreen = new PaintScreen(game1);
             startMenuScreen.Initialize();
         }
 
@@ -87,7 +88,7 @@ namespace Floor_Zero.Classes.Managers
                 }
                 else if (currentGameState == GameState.GameScreen)
                 {
-                    gameScreen.Draw(spriteBatch);
+                    gameScreen.Draw(spriteBatch, graphicsDevice);
                 }
                 else if (currentGameState == GameState.PaintScreen)
                 {
@@ -117,7 +118,7 @@ namespace Floor_Zero.Classes.Managers
             }
             else if (currentGameState == GameState.PaintScreen)
             {
-                paintScreen.Initialize(game);
+                paintScreen.Initialize(graphicsDevice);
                 paintScreen.LoadContent(Content, graphicsDevice);
                 loadedGameState = GameState.PaintScreen;
             }
