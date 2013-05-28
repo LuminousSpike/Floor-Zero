@@ -82,6 +82,7 @@
     <Compile Include="Classes\Managers\Lighting\Lighting_Manager.cs" />
     <Compile Include="Classes\Managers\Manager_GameState.cs" />
     <Compile Include="Classes\Managers\Manager_Tile.cs" />
+    <Compile Include="Classes\Managers\Manager_Render.cs" />
     <Compile Include="Classes\Screens\GameScreen.cs" />
     <Compile Include="Classes\Screens\PaintScreen.cs" />
     <Compile Include="Classes\Screens\StartMenuScreen.cs" />

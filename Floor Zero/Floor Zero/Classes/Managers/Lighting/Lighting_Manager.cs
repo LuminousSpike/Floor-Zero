@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Solar.Graphics.Lighting.Top_Down;
 using Ziggyware;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Floor_Zero.Classes.Managers.Lighting
 {
@@ -14,8 +11,9 @@ namespace Floor_Zero.Classes.Managers.Lighting
     {
         QuadRenderComponent quadRender;
         public ShadowmapResolver shadowmapResolver;
-        public LightArea lightArea1;
         RenderTarget2D screenShadows;
+
+        List<LightArea> listLights = new List<LightArea>();
 
         public Lighting_Manager(Game1 game1)
         {
@@ -30,9 +28,9 @@ namespace Floor_Zero.Classes.Managers.Lighting
 
         public void LoadContent(ContentManager Content, GraphicsDevice graphicsDevice)
         {
-            shadowmapResolver = new ShadowmapResolver(graphicsDevice, quadRender, ShadowmapSize.Size2048, ShadowmapSize.Size2048);
+            shadowmapResolver = new ShadowmapResolver(graphicsDevice, quadRender, ShadowmapSize.Size2048, ShadowmapSize.Size1024);
             shadowmapResolver.LoadContent(Content);
-            lightArea1 = new LightArea(graphicsDevice, ShadowmapSize.Size2048);
+
             screenShadows = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
         }
 
@@ -48,8 +46,30 @@ namespace Floor_Zero.Classes.Managers.Lighting
 
         public void Draw()
         {
-            lightArea1.LightPosition = new Vector2(Game1.mouseState.X, Game1.mouseState.Y);
             
         }
+
+        public void AddLight(LightArea lightArea)
+        {
+            listLights.Add(lightArea);
+        }
+
+        public void ShadowDrawBegin()
+        {
+            foreach (LightArea light in listLights)
+            {
+                light.BeginDrawingShadowCasters();
+            }
+        }
+
+        public void ShadowDrawEnd()
+        {
+            foreach (LightArea light in listLights)
+            {
+                light.EndDrawingShadowCasters();
+            }
+        }
+
+        private void 
     }
 }

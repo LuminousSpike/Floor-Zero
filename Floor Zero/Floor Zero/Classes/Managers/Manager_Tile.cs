@@ -1,14 +1,15 @@
 ﻿using System;
 using Floor_Zero.Classes.Entities;
+using Floor_Zero.Classes.File_System;
+using Floor_Zero.Classes.Managers.Lighting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Solar.Graphics.Cameras;
+using Solar.Graphics.Lighting.Top_Down;
 using Solar.Graphics.Sprites;
 using Solar.Input;
-using Floor_Zero.Classes.File_System;
-using Floor_Zero.Classes.Managers.Lighting;
 
 namespace Floor_Zero.Classes.Managers
 {
@@ -27,6 +28,13 @@ namespace Floor_Zero.Classes.Managers
         private Random rand;
         private TileMapParser tileMapParser = new TileMapParser();
         private RenderTarget2D screenShadows;
+        Lighting_Manager lighting_Manager;
+        private LightArea mouseLight;
+
+        public Manager_Tile(Lighting_Manager lighting_Manager)
+        {
+            this.lighting_Manager = lighting_Manager;
+        }
 
         public void Initialize(bool paintMode, GraphicsDevice graphicsDevice)
         {
@@ -37,6 +45,10 @@ namespace Floor_Zero.Classes.Managers
             rand = new Random();
             this.paintMode = paintMode;
 
+            // Load Light and add to manager.
+            mouseLight = new LightArea(graphicsDevice, ShadowmapSize.Size4096);
+            lighting_Manager.AddLight(mouseLight);
+
             screenShadows = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
         }
 
@@ -45,6 +57,8 @@ namespace Floor_Zero.Classes.Managers
             // Load Tile SpriteSheet
             Texture2D TileTexture = Content.Load<Texture2D>(@"Tile_Sheet");
             tileSheet = new SpriteSheet(TileTexture, new Vector2(tileSize, tileSize));
+
+            
 
             CreateTiles(paintMode);
         }
@@ -66,11 +80,11 @@ namespace Floor_Zero.Classes.Managers
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, BasicCamera2D camera, Lighting_Manager lighting_Manager, GraphicsDevice graphicsDevice)
+        public void Draw(SpriteBatch spriteBatch, BasicCamera2D camera, GraphicsDevice graphicsDevice)
         {
             if (paintMode)
             {
-                PaintDraw(spriteBatch, camera, lighting_Manager, graphicsDevice);
+                PaintDraw(spriteBatch, camera, graphicsDevice);
             }
             else
             {
@@ -83,6 +97,8 @@ namespace Floor_Zero.Classes.Managers
             CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y), Matrix.Invert(camera._transform));
 
             tilesInView = CullTiles(camera);
+
+            mouseLight.LightPosition = CurrentMousePosition;
 
             currentKeyboardState = Keyboard.GetState();
 
@@ -100,10 +116,11 @@ namespace Floor_Zero.Classes.Managers
             tilesInView = CullTiles(camera);
         }
 
-        private void PaintDraw(SpriteBatch spriteBatch, BasicCamera2D camera, Lighting_Manager lighting_Manager, GraphicsDevice graphicsDevice)
+        private void PaintDraw(SpriteBatch spriteBatch, BasicCamera2D camera, GraphicsDevice graphicsDevice)
         {
-            lighting_Manager.lightArea1.LightPosition = CurrentMousePosition;
-            lighting_Manager.lightArea1.BeginDrawingShadowCasters();
+
+            // move this code to Manager_Render to allow for shadow and normal rendering via one method.
+            lighting_Manager.ShadowDrawBegin();
             spriteBatch.Begin();
             for (int x = CalculateLowerTileParseBounds(tilesInView.X); x < CalculateUpperTileParseBounds(tilesInView.Width + 1); x++)
             {
@@ -116,15 +133,15 @@ namespace Floor_Zero.Classes.Managers
 
                         
                     }
-                    MouseHighlight(spriteBatch, x, y, camera);
+                    
                 }
             }
             spriteBatch.End();
-            lighting_Manager.lightArea1.EndDrawingShadowCasters();
+            lighting_Manager.ShadowDrawEnd();
             lighting_Manager.shadowmapResolver.ResolveShadows(lighting_Manager.lightArea1.RenderTarget, lighting_Manager.lightArea1.RenderTarget, lighting_Manager.lightArea1.LightPosition);
 
             graphicsDevice.SetRenderTarget(screenShadows);
-            graphicsDevice.Clear(new Color(15, 15, 15));
+            graphicsDevice.Clear(new Color(8, 8, 8));
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
             spriteBatch.Draw(lighting_Manager.lightArea1.RenderTarget, lighting_Manager.lightArea1.LightPosition - lighting_Manager.lightArea1.LightAreaSize * 0.5f, Color.White * 0.5f);
@@ -132,7 +149,7 @@ namespace Floor_Zero.Classes.Managers
 
             graphicsDevice.SetRenderTarget(null);
 
-            //graphicsDevice.Clear(Color.Black);
+            graphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
@@ -157,6 +174,7 @@ namespace Floor_Zero.Classes.Managers
                 for (int y = CalculateLowerTileParseBounds(tilesInView.Y); y < CalculateUpperTileParseBounds(tilesInView.Height + 1); y++)
                 {
                     tileSheet.Draw(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
+                    MouseHighlight(spriteBatch, x, y, camera);
                 }
             }
         }
