@@ -17,7 +17,7 @@ namespace Floor_Zero.Classes.Screens
         public GameScreen()
         {
             // Managers
-            manager_Tile = new Manager_Tile();
+            //manager_Tile = new Manager_Tile();
         }
 
         public void Initialize()

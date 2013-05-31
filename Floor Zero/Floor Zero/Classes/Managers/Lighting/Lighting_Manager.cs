@@ -4,20 +4,26 @@ using Microsoft.Xna.Framework.Graphics;
 using Solar.Graphics.Lighting.Top_Down;
 using Ziggyware;
 using System.Collections.Generic;
+using Solar.Graphics.Sprites;
+using System;
+using Solar.Graphics.Cameras;
 
 namespace Floor_Zero.Classes.Managers.Lighting
 {
     public class Lighting_Manager
     {
         QuadRenderComponent quadRender;
-        public ShadowmapResolver shadowmapResolver;
-        RenderTarget2D screenShadows;
+        public ShadowmapResolver dynamicShadowmapResolver, staticShadowmapResolver;
+        public RenderTarget2D screenShadows;
+        GraphicsDevice graphicsDevice;
 
-        List<LightArea> listLights = new List<LightArea>();
+        List<LightArea> staticLights = new List<LightArea>();
+        List<LightArea> dynamicLights = new List<LightArea>();
 
         public Lighting_Manager(Game1 game1)
         {
             this.quadRender = new QuadRenderComponent(game1);
+            this.graphicsDevice = game1.GraphicsDevice;
             game1.Components.Add(quadRender);
         }
 
@@ -28,8 +34,11 @@ namespace Floor_Zero.Classes.Managers.Lighting
 
         public void LoadContent(ContentManager Content, GraphicsDevice graphicsDevice)
         {
-            shadowmapResolver = new ShadowmapResolver(graphicsDevice, quadRender, ShadowmapSize.Size2048, ShadowmapSize.Size1024);
-            shadowmapResolver.LoadContent(Content);
+            dynamicShadowmapResolver = new ShadowmapResolver(graphicsDevice, quadRender, ShadowmapSize.Size512, ShadowmapSize.Size512);
+            dynamicShadowmapResolver.LoadContent(Content);
+
+            staticShadowmapResolver = new ShadowmapResolver(graphicsDevice, quadRender, ShadowmapSize.Size1024, ShadowmapSize.Size1024);
+            staticShadowmapResolver.LoadContent(Content);
 
             screenShadows = new RenderTarget2D(graphicsDevice, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
         }
@@ -44,32 +53,72 @@ namespace Floor_Zero.Classes.Managers.Lighting
 
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
-            
-        }
-
-        public void AddLight(LightArea lightArea)
-        {
-            listLights.Add(lightArea);
-        }
-
-        public void ShadowDrawBegin()
-        {
-            foreach (LightArea light in listLights)
+            foreach (LightArea light in staticLights)
             {
-                light.BeginDrawingShadowCasters();
+                spriteBatch.Draw(light.RenderTarget, light.LightPosition - light.LightAreaSize * 0.5f, light.color * 0.8f);
+            }
+
+            foreach (LightArea light in dynamicLights)
+            {
+                spriteBatch.Draw(light.RenderTarget, light.LightPosition - light.LightAreaSize * 0.5f, Color.White * 0.5f);
             }
         }
 
-        public void ShadowDrawEnd()
+        public void AddStationaryLight(LightArea lightArea)
         {
-            foreach (LightArea light in listLights)
+            Random rand = new Random();
+            lightArea.color = new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+            staticLights.Add(lightArea);
+            //dynamicLights.Add(lightArea);
+        }
+
+        public void AddMoveableLight(LightArea lightArea)
+        {
+            dynamicLights.Add(lightArea);
+        }
+
+        private void ShadowDrawBegin(LightArea light)
+        {
+            light.BeginDrawingShadowCasters();
+        }
+
+        private void ShadowDrawEnd(LightArea light)
+        {
+            light.EndDrawingShadowCasters();
+        }
+
+        private void ResolveShadows(LightArea light, ShadowmapResolver shadowmapResolver)
+        {
+            shadowmapResolver.ResolveShadows(light.RenderTarget, light.RenderTarget, light.LightPosition);
+        }
+
+        public void DrawStaticShadows(Action<SpriteBatch, LightArea> drawSprites, SpriteBatch spriteBatch, BasicCamera2D camera)
+        {
+            foreach (LightArea light in staticLights)
             {
-                light.EndDrawingShadowCasters();
+                ShadowDrawBegin(light);
+                drawSprites(spriteBatch, light);
+                ShadowDrawEnd(light);
+                ResolveShadows(light, staticShadowmapResolver);
+
             }
         }
 
-        private void 
+        public void DrawDynamicShadows(Action<SpriteBatch, LightArea> drawSprites, SpriteBatch spriteBatch, BasicCamera2D camera)
+        {
+            foreach (LightArea light in dynamicLights)
+            {
+                if (light.LightPosition.X > (camera.Pos.X - (graphicsDevice.Viewport.Width / 2)) && light.LightPosition.X < (camera.Pos.X + (graphicsDevice.Viewport.Width / 2))
+                    && light.LightPosition.Y > (camera.Pos.Y - (graphicsDevice.Viewport.Height / 2)) && light.LightPosition.Y < (camera.Pos.Y + graphicsDevice.Viewport.Height / 2))
+                {
+                    ShadowDrawBegin(light);
+                    drawSprites(spriteBatch, light);
+                    ShadowDrawEnd(light);
+                    ResolveShadows(light, dynamicShadowmapResolver);
+                }
+            }
+        }
     }
 }

@@ -15,26 +15,26 @@ namespace Floor_Zero.Classes.Screens
         Manager_Tile manager_Tile;
         BasicCamera2D camera = new BasicCamera2D();
         Hud_Manager_GameEditor manager_Hud = new Hud_Manager_GameEditor();
-        Lighting_Manager lighting_Manger;
+        Lighting_Manager lighting_Manager;
 
         public PaintScreen(Game1 game1)
         {
             // Managers
-            manager_Tile = new Manager_Tile();
-            lighting_Manger = new Lighting_Manager(game1);
+            lighting_Manager = new Lighting_Manager(game1);
+            manager_Tile = new Manager_Tile(game1.GraphicsDevice, lighting_Manager);
         }
 
-        public void Initialize(GraphicsDevice graphicsDevice)
+        public void Initialize()
         {
             // Managers
-            manager_Tile.Initialize(true, graphicsDevice);
+            manager_Tile.Initialize(true);
             manager_Hud.Initialize();
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice graphicsDevice)
         {
             // Managers
-            lighting_Manger.LoadContent(Content, graphicsDevice);
+            lighting_Manager.LoadContent(Content, graphicsDevice);
             manager_Tile.LoadContent(Content);
             manager_Hud.LoadContent(Content, graphicsDevice);
         }
@@ -58,7 +58,7 @@ namespace Floor_Zero.Classes.Screens
         {
             // Managers
             
-            manager_Tile.Draw(spriteBatch, camera, lighting_Manger, graphicsDevice);
+            manager_Tile.Draw(spriteBatch, camera);
 
 
             spriteBatch.Begin();
