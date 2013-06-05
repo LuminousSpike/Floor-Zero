@@ -17,8 +17,8 @@ namespace Floor_Zero
         static public Matrix SpriteScale;
 
         // Global variable for GameState Tracking
-        static public  GameState currentGameState = GameState.StartMenu;
-        static public GameState loadedGameState = GameState.StartMenu;
+        static public  GameState currentGameState = GameState.SplashScreen;
+        static public GameState loadedGameState = GameState.SplashScreen;
         static public MouseState mouseState;
 
         Manager_GameState managerGameState = new Manager_GameState();

@@ -8,6 +8,7 @@ namespace Floor_Zero.Classes.Managers
 {
     public enum GameState
     {
+        SplashScreen,
         StartMenu,
         GameScreen,
         PaintScreen
@@ -20,6 +21,7 @@ namespace Floor_Zero.Classes.Managers
         GameState loadedGameState { get { return Game1.loadedGameState; } set { Game1.loadedGameState = value; } }
 
         // Game Screens (States)
+        SplashScreen splashScreen = new SplashScreen();
         StartMenuScreen startMenuScreen = new StartMenuScreen();
         GameScreen gameScreen = new GameScreen();
         PaintScreen paintScreen;
@@ -30,7 +32,7 @@ namespace Floor_Zero.Classes.Managers
         public void Initialize(Game1 game1)
         {
             paintScreen = new PaintScreen(game1);
-            startMenuScreen.Initialize();
+            splashScreen.Initialize();
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace Floor_Zero.Classes.Managers
         /// </summary>
         public void LoadContent(ContentManager Content, GraphicsDevice graphicsDevice)
         {
-            startMenuScreen.LoadContent(Content, graphicsDevice);
+            splashScreen.LoadContent(Content, graphicsDevice);
         }
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace Floor_Zero.Classes.Managers
         /// </summary>
         public void UnloadContent()
         {
-            startMenuScreen.UnloadContent();
+            splashScreen.UnloadContent();
         }
 
         /// <summary>
@@ -56,7 +58,11 @@ namespace Floor_Zero.Classes.Managers
         {
             if (currentGameState == loadedGameState)
             {
-                if (currentGameState == GameState.StartMenu)
+                if (currentGameState == GameState.SplashScreen)
+                {
+                    splashScreen.Update(gameTime);
+                }
+                else if (currentGameState == GameState.StartMenu)
                 {
                     startMenuScreen.Update();
                 }
@@ -82,7 +88,11 @@ namespace Floor_Zero.Classes.Managers
         {
             if (currentGameState == loadedGameState)
             {
-                if (currentGameState == GameState.StartMenu)
+                if (currentGameState == GameState.SplashScreen)
+                {
+                    splashScreen.Draw(spriteBatch);
+                }
+                else if (currentGameState == GameState.StartMenu)
                 {
                     startMenuScreen.Draw(spriteBatch);
                 }
@@ -103,8 +113,13 @@ namespace Floor_Zero.Classes.Managers
         private void LoadGameState(ContentManager Content, GraphicsDevice graphicsDevice, Game game)
         {
             Content.Unload();
-
-            if (currentGameState == GameState.StartMenu)
+            if (currentGameState == GameState.SplashScreen)
+            {
+                splashScreen.Initialize();
+                splashScreen.LoadContent(Content, graphicsDevice);
+                loadedGameState = GameState.SplashScreen;
+            }
+            else if (currentGameState == GameState.StartMenu)
             {
                 startMenuScreen.Initialize();
                 startMenuScreen.LoadContent(Content, graphicsDevice);
