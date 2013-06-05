@@ -112,13 +112,16 @@ namespace Floor_Zero.Classes.Managers
 
         private void DrawTiles(SpriteBatch spriteBatch, BasicCamera2D camera)
         {
+            spriteBatch.GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
             for (int x = CalculateLowerTileParseBounds(tilesInView.X); x < CalculateUpperTileParseBounds(tilesInView.Width + 1); x++)
             {
                 for (int y = CalculateLowerTileParseBounds(tilesInView.Y); y < CalculateUpperTileParseBounds(tilesInView.Height + 1); y++)
                 {
-                    tileSheet.Draw(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
+                    Vector2 lightMap = (CurrentMousePosition - GetTileLocation(x, y)) / 100;
+                    float lightValue = lightMap.Length();
+                    DrawTile(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect, Color.White * (3f / lightValue), tileGrid[x, y].typeID);
                     MouseHighlight(spriteBatch, x, y, camera);
                 }
             }
@@ -175,7 +178,7 @@ namespace Floor_Zero.Classes.Managers
         private void MouseHighlight(SpriteBatch spriteBatch, int x, int y, BasicCamera2D camera)
         {
             if (TileArea(x, y, camera))
-                tileSheet.Draw(spriteBatch, new Vector2(x * tileSize, y * tileSize), SpriteEffects.None, selectedTileIndex);
+                DrawTile(spriteBatch, new Vector2(x * tileSize, y * tileSize), SpriteEffects.None, Color.White, (short)selectedTileIndex);
         }
 
         private bool TileArea(int x, int y, BasicCamera2D camera)
@@ -309,9 +312,9 @@ namespace Floor_Zero.Classes.Managers
             }
         }
 
-        private void DrawTile(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffect, short typeID)
+        private void DrawTile(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffect, Color color, short typeID)
         {
-            tileSheet.Draw(spriteBatch, position, spriteEffect, typeID);
+            tileSheet.Draw(spriteBatch, position, spriteEffect, color, typeID);
         }
     }
 }
