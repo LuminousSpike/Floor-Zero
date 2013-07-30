@@ -20,14 +20,15 @@ namespace Floor_Zero.Classes.Managers
         private int gridSize = 240, tileSize = 64, selectedTileIndex = 3;
         private Tile[,] tileGrid;
         private SpriteSheet tileSheet;
-        private Vector2 selectedTile, CurrentMousePosition;
+        private Vector2 selectedTile, CurrentMousePosition = new Vector2(0, 0);
         private bool paintMode, tileMapChanged;
         private KeyboardState currentKeyboardState, previousKeyboardState;
-        private Rectangle worldArea, _holder, tilesInView;
+        private Rectangle worldArea, tilesInView;
         private Random rand;
         private TileMapParser tileMapParser = new TileMapParser();
-        Lighting_Manager lighting_Manager;
+        private Lighting_Manager lighting_Manager;
         private GraphicsDevice graphicsDevice;
+        private LightSource mouseLight;
 
         public Manager_Tile(GraphicsDevice graphicsDevice, Lighting_Manager lighting_Manager)
         {
@@ -39,8 +40,6 @@ namespace Floor_Zero.Classes.Managers
         {
             tileGrid = new Tile[gridSize, gridSize];
             worldArea = new Rectangle(0, 0, 1280, 720);
-            // Init the holder
-            _holder = new Rectangle(0, 0, tileSize, tileSize);
             rand = new Random();
             this.paintMode = paintMode;
         }
@@ -50,6 +49,12 @@ namespace Floor_Zero.Classes.Managers
             // Load Tile SpriteSheet
             Texture2D TileTexture = Content.Load<Texture2D>(@"Tile_Sheet");
             tileSheet = new SpriteSheet(TileTexture, new Vector2(tileSize, tileSize));
+
+            mouseLight = new LightSource(CurrentMousePosition, 2f, 50f, true);
+
+            lighting_Manager.CreateLightingMap(gridSize, gridSize);
+
+            lighting_Manager.AddLight(mouseLight);
 
             CreateTiles(paintMode);
         }
@@ -95,6 +100,10 @@ namespace Floor_Zero.Classes.Managers
 
             ChangeSelectedTileIndex();
 
+            mouseLight.SetPosition(CurrentMousePosition);
+
+            lighting_Manager.Update(mouseLight);
+
             previousKeyboardState = currentKeyboardState;
         }
 
@@ -119,9 +128,7 @@ namespace Floor_Zero.Classes.Managers
             {
                 for (int y = CalculateLowerTileParseBounds(tilesInView.Y); y < CalculateUpperTileParseBounds(tilesInView.Height + 1); y++)
                 {
-                    Vector2 lightMap = (CurrentMousePosition - GetTileLocation(x, y)) / 100;
-                    float lightValue = lightMap.Length();
-                    DrawTile(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect, Color.White * (3f / lightValue), tileGrid[x, y].typeID);
+                    DrawTile(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect, Color.White * (lighting_Manager.GetLightValue(x, y)), tileGrid[x, y].typeID);
                     MouseHighlight(spriteBatch, x, y, camera);
                 }
             }
@@ -299,6 +306,11 @@ namespace Floor_Zero.Classes.Managers
             {
                 RemoveTile();
                 tileMapChanged = true;
+            }
+
+            if(InputHelper.InputPressed(Keys.F))
+            {
+                lighting_Manager.AddLight(new LightSource(CurrentMousePosition, 2f, 50, false));
             }
 
             if(InputHelper.InputPressed(Keys.P, Buttons.Start))
