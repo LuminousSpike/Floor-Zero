@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Floor Zero", "Floor Zero\Floor Zero\Floor Zero.csproj", "{FC0CF70D-663C-44EF-9BF1-645899F33712}"
+	ProjectSection(ProjectDependencies) = postProject
+		{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8} = {85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Floor ZeroContent", "Floor Zero\Floor ZeroContent\Floor ZeroContent.contentproj", "{2827FD33-211C-4F8D-A338-73158C2B80BB}"
 EndProject

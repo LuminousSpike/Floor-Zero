@@ -30,7 +30,7 @@ namespace Launcher
         private void Grid_Initialized(object sender, EventArgs e)
         {
             WebBrowser.Source = new Uri("http://www.bituser.com/nathan/Floor_Zero/News.html");
-            Lbl_CurrentVersion.Content = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Lbl_CurrentVersion.Content = "Version: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void TB_Close_Click(object sender, RoutedEventArgs e)
@@ -46,6 +46,12 @@ namespace Launcher
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             App.Current.MainWindow.DragMove();
+        }
+
+        private void Btn_Play_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("Floor Zero.exe");
+            this.Close();
         }
     }
 }

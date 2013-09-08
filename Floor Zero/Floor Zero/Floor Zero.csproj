@@ -103,6 +103,10 @@
       <Project>{7A0717A6-11BE-4AC7-B658-0BD2C94501E3}</Project>
       <Name>Solar</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Launcher\Launcher.csproj">
+      <Project>{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}</Project>
+      <Name>Launcher</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Floor ZeroContent\Floor ZeroContent.contentproj">
       <Name>Floor_ZeroContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
