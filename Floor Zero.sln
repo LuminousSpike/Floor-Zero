@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Floor ZeroContent", "Floor 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solar", "..\solar\Solar.csproj", "{7A0717A6-11BE-4AC7-B658-0BD2C94501E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Launcher\Launcher.csproj", "{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -23,6 +25,10 @@ Global
 		{7A0717A6-11BE-4AC7-B658-0BD2C94501E3}.Debug|x86.Build.0 = Debug|x86
 		{7A0717A6-11BE-4AC7-B658-0BD2C94501E3}.Release|x86.ActiveCfg = Release|x86
 		{7A0717A6-11BE-4AC7-B658-0BD2C94501E3}.Release|x86.Build.0 = Release|x86
+		{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}.Debug|x86.ActiveCfg = Debug|x86
+		{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}.Debug|x86.Build.0 = Debug|x86
+		{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}.Release|x86.ActiveCfg = Release|x86
+		{85F33841-E12D-4E8D-A99A-0AD6A65DB0D8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
