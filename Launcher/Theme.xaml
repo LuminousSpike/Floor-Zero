@@ -9,4 +9,8 @@
         <Setter Property="Label.Background" Value="White"/>
         <Setter Property="Label.Opacity" Value="0.3"/>
     </Style>
+    
+    <Style x:Key="StdRichTextBox">
+        <Setter Property="RichTextBox.Opacity" Value="0.3"/>
+    </Style>
 </ResourceDictionary>

@@ -20,6 +20,12 @@
         <Button Content="_" Height="23" HorizontalAlignment="Left" Margin="533,0,0,0" Name="TB_Minimise" Style="{DynamicResource StdButton}" VerticalAlignment="Top" Width="54" Click="TB_Minimise_Click" />
         <Image Height="37" HorizontalAlignment="Left" Margin="215,30,0,0" Name="Image_Header" Stretch="Fill" VerticalAlignment="Top" Width="210" Source="/Launcher;component/Header.png" />
         <Label Content="CURRENT VERSION" Height="23" HorizontalAlignment="Left" Margin="12,385,0,0" Name="Lbl_CurrentVersion" VerticalAlignment="Top" Style="{DynamicResource StdLabel}" />
-        <my:WebControl HorizontalAlignment="Left" Margin="12,75,0,0" Name="WebBrowser" VerticalAlignment="Top" Height="305" Width="616" ViewType="Offscreen" Opacity="0.3" />
+        <RichTextBox Height="306" HorizontalAlignment="Left" Margin="12,73,0,0" Name="RTB_ReleaseNotes" VerticalAlignment="Top" Width="616" Style="{DynamicResource StdRichTextBox}" IsReadOnly="True" OverridesDefaultStyle="False">
+            <RichTextBox.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </RichTextBox.Resources>
+        </RichTextBox>
     </Grid>
 </Window>
