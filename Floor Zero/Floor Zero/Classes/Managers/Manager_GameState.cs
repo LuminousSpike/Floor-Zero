@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-
 namespace Floor_Zero.Classes.Managers
 {
     public enum GameState
@@ -14,20 +13,30 @@ namespace Floor_Zero.Classes.Managers
         PaintScreen
     }
 
-    class Manager_GameState
+    internal class Manager_GameState
     {
         // Set current and loaded GameState
-        GameState currentGameState { get { return Game1.currentGameState; } set { Game1.currentGameState = value; } }
-        GameState loadedGameState { get { return Game1.loadedGameState; } set { Game1.loadedGameState = value; } }
 
         // Game Screens (States)
-        SplashScreen splashScreen = new SplashScreen();
-        StartMenuScreen startMenuScreen = new StartMenuScreen();
-        GameScreen gameScreen = new GameScreen();
-        PaintScreen paintScreen;
+        private readonly GameScreen gameScreen = new GameScreen();
+        private readonly SplashScreen splashScreen = new SplashScreen();
+        private readonly StartMenuScreen startMenuScreen = new StartMenuScreen();
+        private PaintScreen paintScreen;
+
+        private GameState currentGameState
+        {
+            get { return Game1.currentGameState; }
+            set { Game1.currentGameState = value; }
+        }
+
+        private GameState loadedGameState
+        {
+            get { return Game1.loadedGameState; }
+            set { Game1.loadedGameState = value; }
+        }
 
         /// <summary>
-        /// Initailize the Start Menu.
+        ///     Initailize the Start Menu.
         /// </summary>
         public void Initialize(Game1 game1)
         {
@@ -36,7 +45,7 @@ namespace Floor_Zero.Classes.Managers
         }
 
         /// <summary>
-        /// Load Content for Start Menu.
+        ///     Load Content for Start Menu.
         /// </summary>
         public void LoadContent(ContentManager Content, GraphicsDevice graphicsDevice)
         {
@@ -44,7 +53,7 @@ namespace Floor_Zero.Classes.Managers
         }
 
         /// <summary>
-        /// Unload Content for every state.
+        ///     Unload Content for every state.
         /// </summary>
         public void UnloadContent()
         {
@@ -52,7 +61,7 @@ namespace Floor_Zero.Classes.Managers
         }
 
         /// <summary>
-        /// Go through update logic of whichever state is active.
+        ///     Go through update logic of whichever state is active.
         /// </summary>
         public void Update(ContentManager Content, GraphicsDevice graphicsDevice, GameTime gameTime, Game game)
         {
@@ -82,7 +91,7 @@ namespace Floor_Zero.Classes.Managers
         }
 
         /// <summary>
-        /// Go through Draw logic of whichever state is active.
+        ///     Go through Draw logic of whichever state is active.
         /// </summary>
         public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
@@ -108,7 +117,7 @@ namespace Floor_Zero.Classes.Managers
         }
 
         /// <summary>
-        /// Loads the current GameState.
+        ///     Loads the current GameState.
         /// </summary>
         private void LoadGameState(ContentManager Content, GraphicsDevice graphicsDevice, Game game)
         {

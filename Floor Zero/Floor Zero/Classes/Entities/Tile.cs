@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Floor_Zero.Classes.Entities
 {
-    struct Tile
+    internal struct Tile
     {
-        public short typeID;
         public SpriteEffects spriteEffect;
+        public short typeID;
+
         public TileType Type
         {
             get { return TileType.Get(typeID); }
@@ -15,14 +15,14 @@ namespace Floor_Zero.Classes.Entities
         }
     }
 
-    class TileType
+    internal class TileType
     {
+        private static readonly List<TileType> types;
+        public bool Flippable;
         public short ID;
         public string Name;
         public bool solid;
-        public bool Flippable;
 
-        static List<TileType> types;
         static TileType()
         {
             types = new List<TileType>();
@@ -75,7 +75,6 @@ namespace Floor_Zero.Classes.Entities
             StoneFloor.solid = false;
             StoneFloor.Flippable = true;
             types.Add(StoneFloor);
-
         }
 
         public static TileType Get(short id)

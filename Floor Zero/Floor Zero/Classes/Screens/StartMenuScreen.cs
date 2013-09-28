@@ -8,21 +8,26 @@ using Solar.GUI.Controls;
 
 namespace Floor_Zero.Classes.Screens
 {
-    class StartMenuScreen
+    internal class StartMenuScreen
     {
-        GuiSystem guiSystem = new GuiSystem();
-        string buttonMainTexturePath = @"Button", buttonSelectedTexturePath = @"Button Selected", fontPath = @"font";
+        private readonly GuiSystem guiSystem = new GuiSystem();
 
-        Button playButton;
-        Button paintButton;
+        private string buttonMainTexturePath = @"Button",
+            buttonSelectedTexturePath = @"Button Selected",
+            fontPath = @"font";
+
+        private Button paintButton;
+        private Button playButton;
 
         public void Initialize()
         {
             guiSystem.Initialize();
 
             // Create and Add buttons
-            playButton = new Button(new Vector2(175, 50), "Play", buttonMainTexturePath, buttonSelectedTexturePath, fontPath);
-            paintButton = new Button(new Vector2(175, 100), "Paint", buttonMainTexturePath, buttonSelectedTexturePath, fontPath);
+            playButton = new Button(new Vector2(175, 50), "Play", buttonMainTexturePath, buttonSelectedTexturePath,
+                fontPath);
+            paintButton = new Button(new Vector2(175, 100), "Paint", buttonMainTexturePath, buttonSelectedTexturePath,
+                fontPath);
 
             guiSystem.Add(playButton);
             guiSystem.Add(paintButton);

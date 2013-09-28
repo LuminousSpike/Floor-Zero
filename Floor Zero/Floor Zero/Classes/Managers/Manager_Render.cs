@@ -1,10 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 
 namespace Floor_Zero.Classes.Managers
 {
-    class Manager_Render
+    internal class Manager_Render
     {
         private GraphicsDevice graphicsDevice;
 
@@ -15,27 +13,22 @@ namespace Floor_Zero.Classes.Managers
 
         public void LoadContent()
         {
-
         }
 
         public void UnloadContent()
         {
-
         }
 
         public void Draw()
         {
-
         }
 
         public void ShadowDrawBegin()
         {
-
         }
 
         public void ShadowDrawEnd()
         {
-
         }
     }
 }

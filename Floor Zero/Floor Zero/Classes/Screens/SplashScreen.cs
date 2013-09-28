@@ -1,16 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Floor_Zero.Classes.Managers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Solar;
 
 namespace Floor_Zero.Classes.Screens
 {
-    class SplashScreen
+    internal class SplashScreen
     {
-        Timer splashScreenTimer;
-        Texture2D bituserLogo, myLogo;
-        float pastTime;
-        int imageIndex = 0;
+        private Texture2D bituserLogo;
+        private int imageIndex;
+        private Texture2D myLogo;
+        private float pastTime;
+        private Timer splashScreenTimer;
 
         public void Initialize()
         {
@@ -25,14 +27,13 @@ namespace Floor_Zero.Classes.Screens
 
         public void UnloadContent()
         {
-
         }
 
         public void Update(GameTime gameTime)
         {
-            if (splashScreenTimer.Update((float)gameTime.TotalGameTime.TotalSeconds - pastTime))
+            if (splashScreenTimer.Update((float) gameTime.TotalGameTime.TotalSeconds - pastTime))
             {
-                Game1.currentGameState = Managers.GameState.StartMenu;
+                Game1.currentGameState = GameState.StartMenu;
             }
 
             if (splashScreenTimer.Elapsed >= 5)
@@ -40,7 +41,7 @@ namespace Floor_Zero.Classes.Screens
                 imageIndex = 1;
             }
 
-            pastTime = (float)gameTime.TotalGameTime.TotalSeconds;
+            pastTime = (float) gameTime.TotalGameTime.TotalSeconds;
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -8,17 +8,11 @@ using Solar.Input;
 
 namespace Floor_Zero.Classes.Screens
 {
-    class GameScreen
+    internal class GameScreen
     {
         // Managers
-        Manager_Tile manager_Tile;
-        BasicCamera2D camera = new BasicCamera2D();
-
-        public GameScreen()
-        {
-            // Managers
-            //manager_Tile = new Manager_Tile();
-        }
+        private readonly BasicCamera2D camera = new BasicCamera2D();
+        private ManagerTile manager_Tile;
 
         public void Initialize()
         {
@@ -48,7 +42,8 @@ namespace Floor_Zero.Classes.Screens
         public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             // Managers
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None,
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp,
+                DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
             //manager_Tile.Draw(spriteBatch, camera);
             spriteBatch.End();
@@ -56,7 +51,7 @@ namespace Floor_Zero.Classes.Screens
 
         private void UpdateCamera()
         {
-            int speed = 30 + (int)(-camera.Zoom * 10);
+            int speed = 30 + (int) (-camera.Zoom*10);
             if (speed < 1) speed = 1;
             if (InputHelper.InputDown(Keys.W, Buttons.DPadUp))
             {
@@ -76,7 +71,6 @@ namespace Floor_Zero.Classes.Screens
             }
 
             camera.Update(Game1.mouseState);
-
         }
     }
 }

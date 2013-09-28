@@ -14,24 +14,31 @@ using Solar.Input;
 namespace Floor_Zero.Classes.Managers
 {
     /// <summary>
-    /// Manages the Tile System.
+    ///     Manages the Tile System.
     /// </summary>
-    class Manager_Tile
+    internal class ManagerTile
     {
-        private int gridSize = 240, tileSize = 64, selectedTileIndex = 3;
-        private Tile[,] tileGrid;
-        private SpriteSheet tileSheet;
-        private Vector2 selectedTile, CurrentMousePosition;
-        private bool paintMode, tileMapChanged;
-        private KeyboardState currentKeyboardState, previousKeyboardState;
-        private Rectangle worldArea, _holder, tilesInView;
-        private Random rand;
-        private TileMapParser tileMapParser = new TileMapParser();
-        Lighting_Manager lighting_Manager;
+        private readonly GraphicsDevice graphicsDevice;
+        private readonly Lighting_Manager lighting_Manager;
+        private readonly TileMapParser tileMapParser = new TileMapParser();
+        private Vector2 CurrentMousePosition;
+        private Rectangle _holder;
+        private KeyboardState currentKeyboardState;
+        private int gridSize = 240;
         private LightArea mouseLight;
-        private GraphicsDevice graphicsDevice;
+        private bool paintMode;
+        private KeyboardState previousKeyboardState;
+        private Random rand;
+        private Vector2 selectedTile;
+        private int selectedTileIndex = 3;
+        private Tile[,] tileGrid;
+        private bool tileMapChanged;
+        private SpriteSheet tileSheet;
+        private int tileSize = 64;
+        private Rectangle tilesInView;
+        private Rectangle worldArea;
 
-        public Manager_Tile(GraphicsDevice graphicsDevice, Lighting_Manager lighting_Manager)
+        public ManagerTile(GraphicsDevice graphicsDevice, Lighting_Manager lighting_Manager)
         {
             this.graphicsDevice = graphicsDevice;
             this.lighting_Manager = lighting_Manager;
@@ -54,17 +61,15 @@ namespace Floor_Zero.Classes.Managers
         public void LoadContent(ContentManager Content)
         {
             // Load Tile SpriteSheet
-            Texture2D TileTexture = Content.Load<Texture2D>(@"Tile_Sheet");
+            var TileTexture = Content.Load<Texture2D>(@"Tile_Sheet");
             tileSheet = new SpriteSheet(TileTexture, new Vector2(tileSize, tileSize));
 
-            
 
             CreateTiles(paintMode);
         }
 
         public void UnloadContent()
         {
-
         }
 
         public void Update(BasicCamera2D camera)
@@ -93,7 +98,8 @@ namespace Floor_Zero.Classes.Managers
 
         private void PaintUpdate(BasicCamera2D camera)
         {
-            CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y), Matrix.Invert(camera._transform));
+            CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y),
+                Matrix.Invert(camera._transform));
 
             tilesInView = CullTiles(camera);
 
@@ -110,14 +116,14 @@ namespace Floor_Zero.Classes.Managers
 
         private void PlayUpdate(BasicCamera2D camera)
         {
-            CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y), Matrix.Invert(camera._transform)); 
+            CurrentMousePosition = Vector2.Transform(new Vector2(Game1.mouseState.X, Game1.mouseState.Y),
+                Matrix.Invert(camera._transform));
 
             tilesInView = CullTiles(camera);
         }
 
         private void PaintDraw(SpriteBatch spriteBatch, BasicCamera2D camera)
         {
-
             if (tileMapChanged)
             {
                 lighting_Manager.DrawStaticShadows(DrawSolidTiles, spriteBatch, camera);
@@ -129,7 +135,8 @@ namespace Floor_Zero.Classes.Managers
 
             graphicsDevice.SetRenderTarget(lighting_Manager.screenShadows);
             graphicsDevice.Clear(new Color(16, 16, 16));
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.None,
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp,
+                DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
             lighting_Manager.Draw(spriteBatch);
             spriteBatch.End();
@@ -138,29 +145,33 @@ namespace Floor_Zero.Classes.Managers
 
             graphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None,
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp,
+                DepthStencilState.None,
                 RasterizerState.CullCounterClockwise, null, camera.get_transformation(graphicsDevice));
             PlayDraw(spriteBatch, camera);
             spriteBatch.End();
 
-            BlendState blendState = new BlendState();
+            var blendState = new BlendState();
             blendState.ColorSourceBlend = Blend.DestinationColor;
             blendState.ColorDestinationBlend = Blend.SourceColor;
 
             spriteBatch.Begin(SpriteSortMode.Immediate, blendState);
             spriteBatch.Draw(lighting_Manager.screenShadows, Vector2.Zero, Color.White);
             spriteBatch.End();
-
-
         }
 
         private void PlayDraw(SpriteBatch spriteBatch, BasicCamera2D camera)
         {
-            for (int x = CalculateLowerTileParseBounds(tilesInView.X); x < CalculateUpperTileParseBounds(tilesInView.Width + 1); x++)
+            for (int x = CalculateLowerTileParseBounds(tilesInView.X);
+                x < CalculateUpperTileParseBounds(tilesInView.Width + 1);
+                x++)
             {
-                for (int y = CalculateLowerTileParseBounds(tilesInView.Y); y < CalculateUpperTileParseBounds(tilesInView.Height + 1); y++)
+                for (int y = CalculateLowerTileParseBounds(tilesInView.Y);
+                    y < CalculateUpperTileParseBounds(tilesInView.Height + 1);
+                    y++)
                 {
-                    tileSheet.Draw(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
+                    tileSheet.Draw(spriteBatch, GetTileLocation(x, y), tileGrid[x, y].spriteEffect,
+                        tileGrid[x, y].typeID);
                     MouseHighlight(spriteBatch, x, y, camera);
                 }
             }
@@ -168,12 +179,12 @@ namespace Floor_Zero.Classes.Managers
 
         private void AddTile(int tileIndex, Vector2 position, int gridX, int gridY)
         {
-            Tile tile = new Tile() { typeID = (Int16)tileIndex };
+            var tile = new Tile {typeID = (Int16) tileIndex};
             tileGrid[gridX, gridY] = tile;
         }
 
         /// <summary>
-        /// Creates the initial Starting Tiles (White & Grey)
+        ///     Creates the initial Starting Tiles (White & Grey)
         /// </summary>
         private void CreateTiles(bool paintMode)
         {
@@ -184,7 +195,7 @@ namespace Floor_Zero.Classes.Managers
                 for (int y = 0; y < gridSize; y++)
                 {
                     tile++;
-                    if (tile % 2 != 0)
+                    if (tile%2 != 0)
                     {
                         AddTile(0, GetTileLocation(x, y), x, y);
                     }
@@ -198,7 +209,7 @@ namespace Floor_Zero.Classes.Managers
 
         private SpriteEffects ChooseEffect(Random rand)
         {
-            SpriteEffects effect = SpriteEffects.None;
+            var effect = SpriteEffects.None;
             switch (rand.Next(0, 3))
             {
                 case 0:
@@ -216,35 +227,34 @@ namespace Floor_Zero.Classes.Managers
         private void MouseHighlight(SpriteBatch spriteBatch, int x, int y, BasicCamera2D camera)
         {
             if (TileArea(x, y, camera))
-                tileSheet.Draw(spriteBatch, new Vector2(x * tileSize, y * tileSize), SpriteEffects.None, selectedTileIndex);
+                tileSheet.Draw(spriteBatch, new Vector2(x*tileSize, y*tileSize), SpriteEffects.None, selectedTileIndex);
         }
 
         private bool TileArea(int x, int y, BasicCamera2D camera)
         {
-            if ((CurrentMousePosition.X >= GetTileLocation(x, y).X - tileSize && CurrentMousePosition.X <= GetTileLocation(x, y).X) &&
-                (CurrentMousePosition.Y >= GetTileLocation(x, y).Y - tileSize && CurrentMousePosition.Y <= GetTileLocation(x, y).Y))
+            if ((CurrentMousePosition.X >= GetTileLocation(x, y).X - tileSize &&
+                 CurrentMousePosition.X <= GetTileLocation(x, y).X) &&
+                (CurrentMousePosition.Y >= GetTileLocation(x, y).Y - tileSize &&
+                 CurrentMousePosition.Y <= GetTileLocation(x, y).Y))
             {
                 selectedTile = new Vector2(x, y);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private void ReplaceTile(int index)
         {
-            tileGrid[(int)selectedTile.X, (int)selectedTile.Y].typeID = (Int16)index;
-            if (tileGrid[(int)selectedTile.X, (int)selectedTile.Y].Type.Flippable)
+            tileGrid[(int) selectedTile.X, (int) selectedTile.Y].typeID = (Int16) index;
+            if (tileGrid[(int) selectedTile.X, (int) selectedTile.Y].Type.Flippable)
             {
-                tileGrid[(int)selectedTile.X, (int)selectedTile.Y].spriteEffect = ChooseEffect(rand);
+                tileGrid[(int) selectedTile.X, (int) selectedTile.Y].spriteEffect = ChooseEffect(rand);
             }
         }
 
         private void RemoveTile()
         {
-            if ((selectedTile.X + selectedTile.Y) % 2 != 0)
+            if ((selectedTile.X + selectedTile.Y)%2 != 0)
             {
                 ReplaceTile(0);
             }
@@ -273,19 +283,17 @@ namespace Floor_Zero.Classes.Managers
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private Rectangle CullTiles(BasicCamera2D camera)
         {
-            worldArea = new Rectangle((int)camera._pos.X - (int)((1280 / 2) / camera.Zoom), (int)camera._pos.Y - (int)((720 / 2) / camera.Zoom), (int)(1280 / camera.Zoom), (int)(720 / camera.Zoom));
-            int minX = Math.Max((int)Math.Floor((float)worldArea.Left / tileSize), 0);
-            int maxX = Math.Min((int)Math.Ceiling((float)worldArea.Right / tileSize), 1280);
-            int minY = Math.Max((int)Math.Floor((float)worldArea.Top / tileSize), 0);
-            int maxY = Math.Min((int)Math.Ceiling((float)worldArea.Bottom / tileSize), 720);
+            worldArea = new Rectangle((int) camera._pos.X - (int) ((1280/2)/camera.Zoom),
+                (int) camera._pos.Y - (int) ((720/2)/camera.Zoom), (int) (1280/camera.Zoom), (int) (720/camera.Zoom));
+            int minX = Math.Max((int) Math.Floor((float) worldArea.Left/tileSize), 0);
+            int maxX = Math.Min((int) Math.Ceiling((float) worldArea.Right/tileSize), 1280);
+            int minY = Math.Max((int) Math.Floor((float) worldArea.Top/tileSize), 0);
+            int maxY = Math.Min((int) Math.Ceiling((float) worldArea.Bottom/tileSize), 720);
 
             if (minX > 0) minX--;
             if (minY > 0) minY--;
@@ -295,7 +303,7 @@ namespace Floor_Zero.Classes.Managers
 
         private Vector2 GetTileLocation(int x, int y)
         {
-            return new Vector2(x * tileSize, y * tileSize);
+            return new Vector2(x*tileSize, y*tileSize);
         }
 
         private int CalculateLowerTileParseBounds(int tileBound)
@@ -322,9 +330,12 @@ namespace Floor_Zero.Classes.Managers
 
         private void CheckInput()
         {
-            if(InputHelper.InputPressed(Keys.G, Buttons.A))
+            if (InputHelper.InputPressed(Keys.G, Buttons.A))
             {
-                lighting_Manager.AddStationaryLight(new LightArea(graphicsDevice, ShadowmapSize.Size2048) { LightPosition = CurrentMousePosition });
+                lighting_Manager.AddStationaryLight(new LightArea(graphicsDevice, ShadowmapSize.Size2048)
+                {
+                    LightPosition = CurrentMousePosition
+                });
                 tileMapChanged = true;
             }
 
@@ -340,7 +351,7 @@ namespace Floor_Zero.Classes.Managers
                 tileMapChanged = true;
             }
 
-            if(InputHelper.InputPressed(Keys.P, Buttons.Start))
+            if (InputHelper.InputPressed(Keys.P, Buttons.Start))
             {
                 tileMapParser.WriteMap("Map.FZMP", tileGrid, gridSize);
             }
@@ -359,13 +370,18 @@ namespace Floor_Zero.Classes.Managers
         private void DrawSolidTilesCulled(SpriteBatch spriteBatch, LightArea light)
         {
             spriteBatch.Begin();
-            for (int x = CalculateLowerTileParseBounds(tilesInView.X); x < CalculateUpperTileParseBounds(tilesInView.Width + 1); x++)
+            for (int x = CalculateLowerTileParseBounds(tilesInView.X);
+                x < CalculateUpperTileParseBounds(tilesInView.Width + 1);
+                x++)
             {
-                for (int y = CalculateLowerTileParseBounds(tilesInView.Y); y < CalculateUpperTileParseBounds(tilesInView.Height + 1); y++)
+                for (int y = CalculateLowerTileParseBounds(tilesInView.Y);
+                    y < CalculateUpperTileParseBounds(tilesInView.Height + 1);
+                    y++)
                 {
                     if (tileGrid[x, y].Type.solid)
                     {
-                        DrawTile(spriteBatch, light.ToRelativePosition(GetTileLocation(x, y)), tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
+                        DrawTile(spriteBatch, light.ToRelativePosition(GetTileLocation(x, y)),
+                            tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
                     }
                 }
             }
@@ -381,7 +397,8 @@ namespace Floor_Zero.Classes.Managers
                 {
                     if (tileGrid[x, y].Type.solid)
                     {
-                        DrawTile(spriteBatch, light.ToRelativePosition(GetTileLocation(x, y)), tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
+                        DrawTile(spriteBatch, light.ToRelativePosition(GetTileLocation(x, y)),
+                            tileGrid[x, y].spriteEffect, tileGrid[x, y].typeID);
                     }
                 }
             }

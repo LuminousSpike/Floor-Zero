@@ -20,12 +20,10 @@ namespace Floor_Zero.Classes.Entities
 
         public virtual void UnloadContent()
         {
-
         }
 
         public virtual void Update()
         {
-
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

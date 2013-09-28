@@ -9,19 +9,19 @@ using Solar.Graphics.Cameras;
 
 namespace Floor_Zero.Classes.Screens
 {
-    class PaintScreen
+    internal class PaintScreen
     {
         // Managers
-        Manager_Tile manager_Tile;
-        BasicCamera2D camera = new BasicCamera2D();
-        Hud_Manager_GameEditor manager_Hud = new Hud_Manager_GameEditor();
-        Lighting_Manager lighting_Manager;
+        private readonly BasicCamera2D camera = new BasicCamera2D();
+        private readonly Lighting_Manager lighting_Manager;
+        private readonly Hud_Manager_GameEditor manager_Hud = new Hud_Manager_GameEditor();
+        private readonly ManagerTile manager_Tile;
 
         public PaintScreen(Game1 game1)
         {
             // Managers
             lighting_Manager = new Lighting_Manager(game1);
-            manager_Tile = new Manager_Tile(game1.GraphicsDevice, lighting_Manager);
+            manager_Tile = new ManagerTile(game1.GraphicsDevice, lighting_Manager);
         }
 
         public void Initialize()
@@ -57,7 +57,7 @@ namespace Floor_Zero.Classes.Screens
         public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             // Managers
-            
+
             manager_Tile.Draw(spriteBatch, camera);
 
 
@@ -68,7 +68,7 @@ namespace Floor_Zero.Classes.Screens
 
         private void UpdateCamera()
         {
-            int speed = 30 + (int)(-camera.Zoom * 10);
+            int speed = 30 + (int) (-camera.Zoom*10);
             if (speed < 1) speed = 1;
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
@@ -88,7 +88,6 @@ namespace Floor_Zero.Classes.Screens
             }
 
             camera.Update(Game1.mouseState);
-            
         }
     }
 }
